@@ -7,8 +7,14 @@ class MyRunnable : Runnable {
     override fun run() { // Override the original run() function and replace with ours
         for (i in 1..10) {
             Thread.sleep(1000L) // 1 second long. L defines 1000 as a long since that is what .sleep() expects
+            /*
+            "When we use a synchronized block, Java internally uses a monitor, also known as a monitor lock or intrinsic
+            lock, to provide synchronization. These monitors are bound to an object; therefore,
+            all synchronized blocks of the same object can have only one thread executing them at the same time"
+            https://www.baeldung.com/java-synchronized
+             */
             synchronized(lock) { // synchronized is a built-in function that ensures
-                                // threads execute this function one at a time. They are running concurrently in the OS
+                                // threads execute this function one at a time. They are still running concurrently in the OS
                 println("$i  Thread: ${Thread.currentThread().name}")
                 // returns the index and name of the currentThread running
             }
@@ -26,6 +32,14 @@ fun main(){
 
     val myrunnable2 = MyRunnable() // ^^^
     val thread2 = Thread(myrunnable2, "Thread2")
+
+    // priorities tell the CPU how much time should be dedicated to each thread. A thread with a higher priority gets
+    // more time in the CPU. affects the .sleep function because priority doesn't affect sleep time but does affect
+    // the race for each thread to execute the synchronized() block. giving high priority threads the benefit
+
+    // thread1.priority = Thread.MIN_PRIORITY // sets priority. MIN_PRIORITY = 1, NORM_PRIORITY = 5, MAX_PRIORITY = 10
+    // thread2.priority = Thread.MAX_PRIORITY // you can set a custom priority 1 -10 by doing, thread2.priority = 8
+                                                // .priority ALWAYS expects an integer. .priority is the equivalent to Java's .setPriority()
 
     thread1.start() // The thread is executed and JVM allocates an OS level thread and schedules run() to execute
     thread2.start() // ^
@@ -67,5 +81,5 @@ Threads are done
 
 
 // Research shared locks so its flawless everytime
-// research synchronization
 // explore more about Threads and different things that can be done
+// Dive into how priority works deeper within the OS
