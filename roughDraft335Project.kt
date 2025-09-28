@@ -16,9 +16,9 @@ fun main() {
     val condition = access.newCondition() // Condition object. allows threads to wait for a specific condition to be met before continuing
     var count = 0 // shared counter to check which threads turn it is
     val syncTasks = List(5) { i -> // create lambda function. i is used for task order. each iteration of i executes the lambda function. we dont use it since we defined i
-        thread { // creates a thread that will run the specified code
+        thread() { // creates a thread that will run the specified code
             access.lock() // acquires the lock. ensures each thread executes the following blocks one at a time since count and condition cant be executed concurrently. increases hold count
-            try { // if something goes wrong we need the lock to unlock in the finally clause
+            try { // if something goes wrong we need the lock to unlock in the finally clause. Cant be having deadlock occur
                 while (count != i) { // the thread checks to see if it is its turn to run
                     condition.await() // .await(), "Causes the current thread to wait until it is signalled or interrupted." https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/Condition.html
                 }
@@ -42,12 +42,12 @@ fun main() {
             Thread.sleep(100) // gives ordered print before running the repeat() {} block
             repeat(2) { // repeat the lambda twice. since no parameter is defined $it is implicity used as index for the repeat() function
                 println("Thread ${i+1}: Step ${it+1}") // i is used for our thread task count and it is used to show what index of the repeat() function we are one
-                Thread.sleep(100)  // small delay
+                Thread.sleep(100)  // small delay. allows step 1 to execute before step 2
             }
         }
         // most modern operating system schedulers ignore priorities since they think they know better
         if (i == 0) {
-            t.priority = 2  //4
+            t.priority = 2
         }
         else if (i == 1) {
             t.priority = Thread.MIN_PRIORITY //5
