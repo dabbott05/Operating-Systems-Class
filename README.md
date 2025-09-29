@@ -16,7 +16,7 @@
     Semaphors in the Kotlin/JVM frameworks. Allows Thread1 to
     always print before Thread2 does.
 
-# roughDraft335Project
+# roughDraft335Project.kt / FinalProject.kt
     The goal of this project is to allow students to understand how a developer can use a current high level
     programming language to create threads, synchronize threads and set priorities for threads.
     Each team will have to research and find the appropriate programming language code that will
