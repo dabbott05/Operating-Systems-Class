@@ -1,4 +1,5 @@
-import java.util.concurrent.locks.ReentrantLock;import kotlin.concurrent.thread
+import java.util.concurrent.locks.ReentrantLock;
+import kotlin.concurrent.thread
 class Twentylines(val name : String) : Runnable {
     override fun run() {
         println("$name running")
