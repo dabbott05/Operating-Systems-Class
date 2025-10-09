@@ -1,22 +1,4 @@
-# main
-    Both files simply iterate 2 different threads 10 times. There
-    is priority added but I commented it out.
-
-# threadTest.kt
-
-    Implements what ive learned so far about Threads in the 
-    Kotlin/JVM frameworks. A synchronized block is added
-    allowing the first pairs of threads to print before the next
-    pair of threads. Does not garuntee thread1 will print before 
-    thread2. It is simply a race to whoever executes the 
-    synchronize() block first.
-
-# semaphorTest.kt
-    Implements what i have learned so far about Threads and
-    Semaphors in the Kotlin/JVM frameworks. Allows Thread1 to
-    always print before Thread2 does.
-
-# roughDraft335Project.kt / FinalProject.kt
+# PROJECT 1 RUBRIC
     The goal of this project is to allow students to understand how a developer can use a current high level
     programming language to create threads, synchronize threads and set priorities for threads.
     Each team will have to research and find the appropriate programming language code that will
@@ -51,8 +33,31 @@
     programmers than other team members. There will have to be much collaboration amongst the team to
     help educate each other
 
-# to-do
-    explore more about Threads and different things that can be
-    done Dive into how priority works deeper within the OS
-    start thinking of what tasks should be done for the project
-    meet with team
+# threadTest.kt
+    This is my first version of the multi-threading kotlin project.
+    
+    Implements what ive learned so far about Threads in the 
+    Kotlin/JVM frameworks. A synchronized block is added
+    allowing the first pairs of threads to print before the next
+    pair of threads. Does not garuntee thread1 will print before 
+    thread2. It is simply a race to whoever executes the 
+    synchronize() block first.
+
+# semaphorTest.kt
+    This is my  second version of the ulti-threaded kotlin project
+
+    Implements what i have learned so far about Threads and
+    Semaphors in the Kotlin/JVM frameworks. Allows Thread1 to
+    always print before Thread2 does. I did alot of research regarding 
+    semaphores and how they can help us obtain synchronization
+
+# roughDraft335Project.kt 
+    This is the rough draft of the multi-threaded kotlin project. I 
+    did alot of research and decided that using a Reentrant lock and 
+    Conditions was the best way to go about it. Reentrant locks help 
+    with only allowing one thread to execute the critical section at a single time.
+    Conditions help us change the state of the current thread holding the lock
+
+# FinalProject.kt
+    This is the final program we submitted. It builds off of the rough draft but 
+    is way more polished. This is the program we presented to the class with.
