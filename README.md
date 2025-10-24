@@ -61,3 +61,36 @@
 # FinalProject.kt
     This is the final program we submitted. It builds off of the rough draft but 
     is way more polished. This is the program we presented to the class with.
+
+# PROJECT 2 RUBRIC
+    The goal of this project is to allow students to understand how important managing computer memory
+    is for a programmer. Programmers can do this by understanding three major concepts: 1) Stacks, 2)
+    Heaps, and 3) Buffers. How each programming language works with the OS in managing this is different.
+    Some languages allow for a programmer in that language to give very specific instructions in memory
+    management and other languages really cede all control to the OS and there are minimal instructions
+    the language gives for any type of memory management.
+    • Each team will first have to research and learn not only the general concepts of what
+    programming stacks, heaps, and buffers are, but then will have to learn how their specific OS
+    and programming language works in managing those.
+    • Each team will have to show some code that will reflect the findings of their research to show
+    how a programmer, using the team’s specific programming language, would write code to
+    effectively and efficiently use computer memory when it comes to stacks, heaps and buffers.
+    • The team will also need to explain and demonstrate how the IDE they are using has or does not
+    have any built-in tools to help in understanding a program’s memory usage.
+    • The team can also demonstrate any OS tools that would help show the memory usage by a
+    specific process. (optional)
+    • Each team will then make a 15–20-minute presentation on all their research findings.
+    Presentations will be made on Tuesday October 28.
+    o It will be important that each team member have complete understanding of everything
+    the team is presenting
+    o There should be clear explanations and descriptions of all material presented and no
+    just reading of information.
+    o Make sure the presentations are well rehearsed.
+    This assignment is going to be graded not on just the code and quick explanation, but on each team
+    member’s depth of understanding of the material. I am expecting each team to be able to teach the
+    rest of the class not only the code, but what the code does, how and when to use it compared to other
+    code, and why your team decided to do it this way.
+# MemTest.kt
+    This is my first version of the meory management project. I did alot of research on stacks, heaps, and buffers.
+    This project was coded in kotlin and it demonstrates the call stack (calling a function) and the allocation of heap memory. 
+    Did research on how the JVM works with operating systems to manage the memory.
