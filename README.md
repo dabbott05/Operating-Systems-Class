@@ -91,6 +91,6 @@
     rest of the class not only the code, but what the code does, how and when to use it compared to other
     code, and why your team decided to do it this way.
 # MemTest.kt
-    This is my first version of the meory management project. I did alot of research on stacks, heaps, and buffers.
+    This is my final version of the memory management project. I did alot of research on stacks, heaps, and buffers.
     This project was coded in kotlin and it demonstrates the call stack (calling a function) and the allocation of heap memory. 
     Did research on how the JVM works with operating systems to manage the memory.
