@@ -9,6 +9,7 @@ import java.awt.Graphics
 import java.awt.image.BufferedImage
 import java.awt.image.DataBufferByte
 import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JButton
 import javax.swing.JFrame
 import javax.swing.JPanel
@@ -25,11 +26,17 @@ fun main() {
         val panel = VideoPanel()
         frame.contentPane.add(panel)
 
-        val captureButton = JButton("Capture Filtered Image")
-        captureButton.addActionListener {
-            panel.captureFilteredImage()
+        val removeButton = JButton("Remove Filter")
+        removeButton.addActionListener {
+            panel.setGrayscale(false)
         }
-        frame.add(captureButton, "South")  // Button at bottom
+        val applyButton = JButton("Apply Filter")
+        applyButton.addActionListener {
+            panel.setGrayscale(true)
+        }
+
+        frame.add(removeButton, "South")  // Button at bottom
+        frame.add(applyButton, "North")
 
         frame.setSize(640, 520)  // Extra height for button
         frame.isVisible = true
@@ -45,16 +52,23 @@ fun main() {
 
         val executor = Executors.newSingleThreadExecutor()
         executor.execute {
-            val mat = Mat()
+            val colorMat = Mat()
+            val grayMat = Mat()
             while (true) {
-                if (!cap.read(mat)) break
+                if (!cap.read(colorMat)) break
 
-                // Apply filter: Grayscale
-                Imgproc.cvtColor(mat, mat, Imgproc.COLOR_BGR2GRAY)
+                val displayMat = if (panel.isGrayscale()) {
+                    Imgproc.cvtColor(colorMat, grayMat, Imgproc.COLOR_BGR2GRAY)
+                    grayMat
+                } else {
+                    colorMat
+                }
 
-                panel.updateImage(mat)
+                panel.updateImage(displayMat)
             }
             cap.release()
+            colorMat.release()
+            grayMat.release()
         }
     }
 }
@@ -62,29 +76,32 @@ fun main() {
 class VideoPanel : JPanel() {
     private var image: BufferedImage? = null
     private var currentMat: Mat? = null
+    private val grayscaleFlag: AtomicBoolean = AtomicBoolean(false)
+
+    fun isGrayscale(): Boolean = grayscaleFlag.get()
+
+    fun setGrayscale(enabled: Boolean) {
+        grayscaleFlag.set(enabled)
+    }
 
     fun updateImage(mat: Mat) {
         currentMat = mat.clone()
 
+        val width = mat.cols()
+        val height = mat.rows()
+
         val channels = mat.channels()
         val type = if (channels > 1) BufferedImage.TYPE_3BYTE_BGR else BufferedImage.TYPE_BYTE_GRAY
 
-        val bufferSize = channels * mat.cols() * mat.rows()
+        val bufferSize = channels * width * height
         val byteArray = ByteArray(bufferSize)
         mat[0, 0, byteArray]
 
-        image = BufferedImage(mat.cols(), mat.rows(), type)
+        image = BufferedImage(width, height, type)
         val targetPixels = (image!!.raster.dataBuffer as DataBufferByte).data
         System.arraycopy(byteArray, 0, targetPixels, 0, byteArray.size)
 
         repaint()
-    }
-
-    fun captureFilteredImage() {
-        currentMat?.let {
-            Imgcodecs.imwrite("captured_filtered.jpg", it)
-            println("Captured and saved filtered image!")
-        }
     }
 
     override fun paintComponent(g: Graphics) {
