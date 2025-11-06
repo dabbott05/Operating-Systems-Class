@@ -124,7 +124,7 @@
     down. Every team member must be involved in finding the solution, applying the solution, and testing
     the solution and be able to explain the solution.
 
-# Main.kt
+# WebcamProject.kt
     This is our final version of project 3 . It uses opencv to manage the webcam 
     and apply a filter . We had to alot of research on converting a MAT to a bufferedByte
     so that Swing can paint the image . We did lot of research on how images are stored
