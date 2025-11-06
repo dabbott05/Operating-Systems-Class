@@ -94,3 +94,35 @@
     This is my final version of the memory management project. I did alot of research on stacks, heaps, and buffers.
     This project was coded in kotlin and it demonstrates the call stack (calling a function) and the allocation of heap memory. 
     Did research on how the JVM works with operating systems to manage the memory.
+
+# PROJECT 3 RUBRIC
+    The goal of this project is to allow students to understand how a developer can use a current high level
+    programming language to connect to a device (webcam) and comprehend the different levels of the OS
+    device stack that are implemented along the way.
+    • Each team will write a simple program in the assigned programming language that will:
+    o Make a connection to the computers webcam
+    o Display the live image
+    o Apply some type of filter and manipulate the live image in some way
+    • Each team will need to research and find the appropriate APIs/Libraries necessary to import to
+    connect a basic application to the computers webcam. The application must then capture a
+    single picture from the webcam and display it in the app in some format.
+    • The final step will be to add a filter to the displayed photo.
+    • It will be necessary to get this to work on each team member’s individual computer.
+    • On Thursday Nov. 6 each team will then have to show me the working code app on each team
+    member’s computer.
+    o The team will also have to describe to me the process the TEAM went through to find
+    the correct solution and code.
+    ▪ What websites the team used to find the solution
+    ▪ Did the team use AI and how did it help and what did you learn
+    o I also want to hear about all the problems the team ran into to get the solution to work
+    on each computer and how they solved those problems.
+    o I also want the team to explain to me what each part of the code does and why it is
+    necessary
+    This assignment is not going to be graded on just if the code works or does not work on each team
+    member’s computer, but how well everyone worked together to solve the problem. If just one person
+    finds the solution and just puts it on everyone’s computer, then the team will be significantly marked
+    down. Every team member must be involved in finding the solution, applying the solution, and testing
+    the solution and be able to explain the solution.
+
+# Main.kt
+    This is our final version of project 3 . It uses opencv to manage the webcam and apply a filter . 
