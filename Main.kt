@@ -1,8 +1,8 @@
-import nu.pattern.OpenCV
-import org.opencv.core.Core
-import org.opencv.core.Mat
-import org.opencv.imgproc.Imgproc
-import org.opencv.videoio.VideoCapture
+import nu.pattern.OpenCV // import openCV
+import org.opencv.core.Core // used to flip the picture
+import org.opencv.core.Mat // used to create matrices for pixels
+import org.opencv.imgproc.Imgproc // used to process the image and change the color
+import org.opencv.videoio.VideoCapture // used to set up capture variable to hardware webcam
 import java.awt.Graphics
 import java.awt.image.BufferedImage
 import java.awt.image.DataBufferByte
@@ -14,8 +14,7 @@ import javax.swing.JPanel
 import javax.swing.SwingUtilities
 
 fun main() {
-    // load OpenCV with bundled natives (must be first)
-    OpenCV.loadLocally()
+    OpenCV.loadLocally() // loads native library , detects OS , should be invoked before any other OpenCV operations to avoid runtime failures
 
     SwingUtilities.invokeLater {
         val frame = JFrame("Webcam Live Feed with Filter") // makes our main frame . this isnt the video but the background
