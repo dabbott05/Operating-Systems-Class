@@ -14,7 +14,7 @@ import javax.swing.JPanel
 import javax.swing.SwingUtilities
 
 fun main() {
-    // Load OpenCV with bundled natives (must be first)
+    // load OpenCV with bundled natives (must be first)
     OpenCV.loadLocally()
 
     SwingUtilities.invokeLater {
@@ -36,7 +36,7 @@ fun main() {
         frame.add(removeButton, "South")  // places the remove button at the bottom
         frame.add(applyButton, "North") // places the apply button at the top
 
-        frame.setSize(500, 500) // sets the frame size
+        frame.setSize(1280, 1280) // sets the frame size
         frame.isVisible = true // we need this to actually see the GUI
 
         val cap = VideoCapture(0) // this is initializing our camera , 0 is the default camera (usually the laptop camera)
@@ -44,9 +44,6 @@ fun main() {
             println("Error: Could not open camera")
             return@invokeLater // aborts the lambda . will not move towards the executor
         }
-
-        //cap.set(Videoio.CAP_PROP_FRAME_WIDTH, 640.0)
-        //cap.set(Videoio.CAP_PROP_FRAME_HEIGHT, 480.0)
 
         val executor = Executors.newSingleThreadExecutor() // we need a seperate thread pool from the GUI so that the background
         // video proccesses do not interfere with the GUI . without this we wouldnt be able to click the buttons or resize the window
@@ -75,9 +72,9 @@ fun main() {
 }
 
 class VideoPanel : JPanel() {
-    private var image: BufferedImage? = null
-    private var currentMat: Mat? = null
-    private val grayscaleFlag: AtomicBoolean = AtomicBoolean(false)
+    var image: BufferedImage? = null
+    var currentMat: Mat? = null
+    val grayscaleFlag: AtomicBoolean = AtomicBoolean(false)
 
     fun isGrayscale(): Boolean = grayscaleFlag.get()
 
@@ -85,7 +82,7 @@ class VideoPanel : JPanel() {
         grayscaleFlag.set(enabled)
     }
 
-    fun updateImage(mat: Mat) {
+    fun updateImage(mat: Mat) { // this method converts the image MAT to a buffered image so that Swing can display the image
         currentMat = mat.clone() // clone the matrix for safety reasons
 
         val width = mat.cols() // the amount of columns of pixels we have is the width of the panel
@@ -96,17 +93,27 @@ class VideoPanel : JPanel() {
 
         val bufferSize = channels * width * height
         val byteArray = ByteArray(bufferSize)
-        mat[0, 0, byteArray]
+        mat[0, 0, byteArray] // start at col 1 and row 1 and copy it into byteArray
 
-        image = BufferedImage(width, height, type)
-        val targetPixels = (image!!.raster.dataBuffer as DataBufferByte).data
-        System.arraycopy(byteArray, 0, targetPixels, 0, byteArray.size)
+        image = BufferedImage(width, height, type) // creates an instance of the BufferedImage . BufferedImage is
+        // optimized for pixel management . Swing cannot draw a MAT type so thats why we convert it to a BufferedImage .
+        // BufferedImage represents the image in memory
+        val targetPixels = (image!!.raster.dataBuffer as DataBufferByte).data // image!! - assumes that image is NOT NULL .
+        // raster - BufferedImage internally use raster objects to manage the pixel data . We get the dataBuffer which holds the
+        // actual data and cast it as a DataBufferByte . we cast it because BufferedImage uses type byte .
+        // .data - accesses the data property of DataBufferByte, which is the raw ByteArray holding all the pixel bytes
+        System.arraycopy(byteArray, 0, targetPixels, 0, byteArray.size) // copies the byteArray
+        // starting at position 0 to targetPixels at position 0 with the size of our byteArray
 
-        repaint()
+        repaint() // "something changed you need to call me"
     }
 
-    override fun paintComponent(g: Graphics) {
-        super.paintComponent(g)
-        image?.let { g.drawImage(it, 0, 0, width, height - 40, null) }  // Adjust for button
+    override fun paintComponent(g: Graphics) { // we override becaus eby default JPanel paints a black screen
+        super.paintComponent(g) // clears background , paints borders . super calls the superclass of JPanel
+        image?.let { g.drawImage(it, 0, 0, width, height, null) }
+        // image? makes sure that image is not null . we need to safely draw the BufferedImage onto the panel . .let
+        // runs the code block in the curly braces . it stands for image . .let helps us avoid using if statements by saying
+        // "If this thing exists, let me do something with it." .  we pass null since our image is already loaded in memory .
+        // the observer monitors image loading
     }
 }
