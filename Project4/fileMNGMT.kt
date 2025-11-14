@@ -1,4 +1,6 @@
 import java.io.File
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 data class Record (
     val firstName: String,
@@ -42,7 +44,7 @@ fun appendTextFile() {
     val file = File(filePath)
 
     if (!file.exists()) {
-        println("File does not exist. Run the create program first.")
+        println("File does not exist. Run the create program first")
         return
     }
 
@@ -56,13 +58,19 @@ fun appendTextFile() {
     if (content.size != 50){
         throw IllegalStateException("Source file must contain exactly 50 records. Counting: ${content.size} records")
     }
-        file.appendText(sourceFile.readLines().joinToString(separator = "\n"))
+    file.appendText(sourceFile.readLines().joinToString(separator = "\n"))
 
 }
 
 fun readTextFile() {
     val filePath = "project_files/example.txt"
         val file = File(filePath)
+
+    if (!file.exists()) {
+        println("File does not exist. Run the create program first")
+        return
+    }
+
         val list = ArrayList<String>()
         val records = file.readLines()
         records.forEach {
@@ -74,17 +82,95 @@ fun readTextFile() {
 }
 
 fun createJsonFile() {
+    val directory = "project_files"
+    val filePath = "$directory/json-example.txt"
+    val dir = File(directory)
+    if (!dir.exists()) {
+        dir.mkdirs()
+    }
+    val file = File(filePath)
 
+    val sourcePath = "/Users/danielabbott/Downloads/fake_data_records.txt"
+    val sourceFile = File(sourcePath)
+    if (!sourceFile.exists()) {
+        println("Source file does not exist: $sourcePath")
+        return
+    }
+    file.createNewFile()
+
+    val content = sourceFile.readLines()
+    if (content.size != 50){
+        println("File does not contain exactly 50 records.")
+    }
+
+    val records = mutableListOf<Record>()
+    content.forEach { line ->
+        val fields = line.trim().split(",")
+        if (fields.size == 8){
+            records.add(Record(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], fields[7]))
+        }
+        else{
+            println("Fields need to be 8 . Counting: ${fields.size} fields")
+        }
+    }
+    val gson = Gson()
+    file.bufferedWriter().use{ writer ->
+        gson.toJson(records, writer)
+    }
 
 }
 
 fun appendJsonFile() {
+    val filePath = "project_files/json-example.txt"
+    val file = File(filePath)
 
+    if (!file.exists()) {
+        println("File does not exist. Run the create program first")
+        return
+    }
 
+    val sourcePath = "/Users/danielabbott/Downloads/fake_data_records_50.txt"
+    val sourceFile = File(sourcePath)
+    if (!sourceFile.exists()) {
+        println("Source file does not exist: $sourcePath")
+        return
+    }
+    val content = sourceFile.readLines()
+    if (content.size != 50){
+        println("Source file must contain exactly 50 records. Counting: ${content.size} records")
+    }
+
+    val gson = Gson()
+    val listType = object : TypeToken<MutableList<Record>>() {}.type
+    val existingRecords : MutableList<Record> = file.bufferedReader().use { reader ->
+        gson.fromJson(reader, listType)
+    }
+
+    val newRecords = mutableListOf<Record>()
+    content.forEach { line ->
+        val fields = line.trim().split(",")
+        if (fields.size == 8){
+            newRecords.add(Record(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], fields[7]))
+        }
+        else{
+            println("Fields need to be 8 . Counting: ${fields.size} fields")
+        }
+    }
+
+    existingRecords.addAll(newRecords)
+    file.bufferedWriter().use { writer ->
+        gson.toJson(existingRecords, writer)
+    }
 }
 
 fun readJsonFile() {
+    val filePath = "project_files/example.txt"
+    val file = File(filePath)
 
+    if (!file.exists()) {
+        println("File does not exist. Run the create program first")
+        return
+    }
 
 }
 
@@ -101,17 +187,19 @@ fun main() {
     val filePath = "project_files/example.txt"
     val file = File(filePath)
     createTxtFile()
+    createJsonFile()
     appendTextFile()
+    appendJsonFile()
 
     if (!file.exists()) {
-        println("File does not exist. Run the create and append programs first.")
+        println("File does not exist. Run the create and append programs first")
         return
     }
 
     val records = ArrayList<Record>()
-    file.bufferedReader().use { reader ->
-        reader.forEachLine { line ->
-            val fields = line.trim().split(",")
+    file.bufferedReader().use { reader -> // bufferedreader to efficiently read the file . stores in reader
+        reader.forEachLine { line -> // for each line in the reader
+            val fields = line.trim().split(",") // split at the comma so we can get our fields
             if (fields.size == 8) {
                 records.add(
                     Record(
@@ -124,7 +212,7 @@ fun main() {
         }
 
         if (records.size != 150) {
-            println("Warning: Expected 150 records, but found ${records.size}.")
+            println("Expected 150 records. Counting: ${records.size} records")
 
         }
     printTable(records)
