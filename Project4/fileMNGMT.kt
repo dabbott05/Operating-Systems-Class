@@ -62,23 +62,29 @@ fun appendTextFile() {
 
 }
 
-fun readTextFile() {
+fun readTextFile() : ArrayList<Record>{
+
     val filePath = "project_files/example.txt"
         val file = File(filePath)
 
     if (!file.exists()) {
         println("File does not exist. Run the create program first")
-        return
     }
-
-        val list = ArrayList<String>()
-        val records = file.readLines()
-        records.forEach {
-            val trimmed = it.trim()
-            list.add(trimmed)
-            println(trimmed)
+    val records = ArrayList<Record>()
+    file.bufferedReader().use { reader -> // bufferedreader to efficiently read the file . stores in reader
+        reader.forEachLine { line -> // for each line in the reader
+            val fields = line.trim().split(",") // split at the comma so we can get our fields
+            if (fields.size == 8) {
+                records.add(
+                    Record(
+                        fields[0], fields[1], fields[2], fields[3],
+                        fields[4], fields[5], fields[6], fields[7]
+                    )
+                )
+            }
         }
-
+    }
+    return records
 }
 
 fun createJsonFile() {
@@ -155,6 +161,7 @@ fun appendJsonFile() {
         else{
             println("Fields need to be 8 . Counting: ${fields.size} fields")
         }
+
     }
 
     existingRecords.addAll(newRecords)
@@ -163,14 +170,23 @@ fun appendJsonFile() {
     }
 }
 
-fun readJsonFile() {
-    val filePath = "project_files/example.txt"
+fun readJsonFile() : List<Record> {
+    val filePath = "project_files/json-example.txt"
     val file = File(filePath)
 
     if (!file.exists()) {
         println("File does not exist. Run the create program first")
-        return
     }
+    val gson = Gson()
+    val listType = object : TypeToken<List<Record>>() {}.type
+    val records: List<Record> = file.bufferedReader().use { reader ->
+        gson.fromJson(reader, listType)
+    }
+    records.forEach { record ->
+        val line = "${record.firstName},${record.lastName},${record.dob},${record.phone},${record.street},${record.city},${record.state},${record.zip}"
+        //println(line)
+    }
+    return records
 
 }
 
@@ -183,37 +199,23 @@ fun printTable(records: List<Record>) {
     }
 }
 
+fun printTableTXT(records: ArrayList<Record>) {
+    println("| First Name | Last Name | DOB        | Phone           | Street Address     | City           | State | Zip     |")
+    println("|------------|-----------|------------|-----------------|--------------------|----------------|-------|---------|")
+
+    records.forEach { record ->
+        println("| ${record.firstName.padEnd(10)} | ${record.lastName.padEnd(9)} | ${record.dob.padEnd(10)} | ${record.phone.padEnd(15)} | ${record.street.padEnd(22)} | ${record.city.padEnd(14)} | ${record.state.padEnd(5)} | ${record.zip.padEnd(7)} |")
+    }
+}
+
 fun main() {
-    val filePath = "project_files/example.txt"
-    val file = File(filePath)
     createTxtFile()
     createJsonFile()
     appendTextFile()
     appendJsonFile()
 
-    if (!file.exists()) {
-        println("File does not exist. Run the create and append programs first")
-        return
-    }
-
-    val records = ArrayList<Record>()
-    file.bufferedReader().use { reader -> // bufferedreader to efficiently read the file . stores in reader
-        reader.forEachLine { line -> // for each line in the reader
-            val fields = line.trim().split(",") // split at the comma so we can get our fields
-            if (fields.size == 8) {
-                records.add(
-                    Record(
-                        fields[0], fields[1], fields[2], fields[3],
-                        fields[4], fields[5], fields[6], fields[7]
-                        )
-                    )
-                }
-            }
-        }
-
-        if (records.size != 150) {
-            println("Expected 150 records. Counting: ${records.size} records")
-
-        }
-    printTable(records)
-    }
+    println("JSON FILE START")
+    printTable(readJsonFile())
+    println("TEXT FILE START")
+    printTableTXT(readTextFile())
+}
