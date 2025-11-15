@@ -129,3 +129,68 @@
     and apply a filter . We had to alot of research on converting a MAT to a bufferedByte
     so that Swing can paint the image . We did lot of research on how images are stored
     in multidimensional arrays and how to manipulate the individual raw pixel data .
+
+# PROJECT 4 RUBRIC
+    The goal of this project is to allow team members to learn how to create a file, write information to
+    the file and then read the information from the file. Programmers do not have to write lines and
+    lines of code to do this. Most of the work is done by the OS. Programmers request the OS to create
+    a file by passing in a file name and location. The OS will then work with the proper device to confirm
+    the file can be created and then make the request to create the file. The device will report back to
+    the OS that the file has been created, the OS will then add that information to the FAT, (File
+    Allocation Table), that the OS manages. Once all that is done the OS will report back to the
+    application that the file has been created. If there were problems at any point in that process the OS
+    will send back an exception that the programmer can decide to handle and how to handle it.
+    To write a file a programmer must decide how to layout the file format. How will the data be laid out
+    and then the code will be sent to the OS to request that the data be written in the appropriate file
+    layout. The other option is that the file is already create and the developer is only requesting the
+    new data to be appended to the file. Again, the OS will work with the appropriate storage device to
+    write the data and then update the OS file management tables. If all goes well the program will be
+    notified a success code, if not an exception will be returned.
+    To read from a file the programmer must first request the file be opened, meaning loaded into
+    memory. This request is handled by the OS. The OS will work with the appropriate storage device to
+    assure the file is present and available and has access clearance. If all those parameters are cleared
+    the OS will load the file to RAM ready for the application to begin processing the file. The file status
+    will be reported back to the application. The developer must have an understanding of the file
+    format in order to write the application code to properly read and write to the file. The OS will notify
+    the application when records are available to be worked with.
+    For this project each team will write a total of six different programs. Some programs will create
+    new files and write data to them, and some will open files and append data to the already created
+    file. Some programs will open files and read data from the already created and written to files.
+    Text Files:
+    The first type of files that the team will work with will be text files. The format of these files is
+    comma delimited with a line break separating records of data. This means each line in the file will
+    hold one record of data that is broken into fields of data separated by commas. One record per line.
+    • The team will create one program to create the file and write 10 records to it doing the
+    following:
+    o Create a file in a specific directory
+    o Write 100 single line records to the file. You can use a random data generator to come
+    up with the data.
+    ▪ Each record will be made up of the following data:
+    • First name
+    • Last name
+    • Date of birth
+    • Phone number
+    • Street address
+    • City
+    • State
+    • Zip
+    ▪ All attributes should be separated in each line by a comma
+    ▪ Each record will be on a new line
+    o Close and save the file
+    • The team will create a second program that will open the file that was created in the first
+    program and append 50 new records to it by performing the following:
+    o Reopen the file and append 50 new records following the same format as listed above
+    o Close and save the file
+    • The team will create a third program that does the following:
+    o Will open the file that has the 150 records in it and will read each of the records
+    attributes and store the data in a list/array.
+    o Will print out the data in the list/array in table format.
+    Json Files:
+    Each team will have to do some research and find out the layout/format of a Json file. Json files are
+    the most popular way to transfer data between applications across the web. The format has a very
+    strict layout and must be followed. If it is followed, then different applications can write and read
+    the files very quickly. Each programming language in this course has an API that will help in writing
+    and reading files in Json format.
+    • Re do the same assignment as above but do all writing and reading in Json format.
+    • You must use the appropriate API to do this
+    • You will be creating three more programs.
