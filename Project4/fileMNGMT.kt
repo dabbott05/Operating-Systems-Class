@@ -13,23 +13,8 @@ data class Record (
     val zip: String
 )
 
-fun createTxtFile() {
-    val directory = "project_files"
-    val filePath = "$directory/example.txt"
-    val dir = File(directory)
-    if (!dir.exists()) {
-        dir.mkdirs()
-    }
-    val file = File(filePath)
-
-    val sourcePath = "/Users/danielabbott/Downloads/fake_data_records.txt"
-    val sourceFile = File(sourcePath)
-    if (!sourceFile.exists()) {
-        println("Source file does not exist: $sourcePath")
-        return
-    }
+fun createTxtFile(file : File, sourceFile : File) {
     file.createNewFile()
-
 
     val content = sourceFile.readLines()
     if (content.size != 100) {
@@ -39,21 +24,7 @@ fun createTxtFile() {
     file.writeText(content.joinToString(separator = "\n"))
 }
 
-fun appendTextFile() {
-    val filePath = "project_files/example.txt"
-    val file = File(filePath)
-
-    if (!file.exists()) {
-        println("File does not exist. Run the create program first")
-        return
-    }
-
-    val sourcePath = "/Users/danielabbott/Downloads/fake_data_records_50.txt"
-    val sourceFile = File(sourcePath)
-    if (!sourceFile.exists()) {
-        println("Source file does not exist: $sourcePath")
-        return
-    }
+fun appendTextFile(file : File, sourceFile : File) {
     val content = sourceFile.readLines()
     if (content.size != 50){
         throw IllegalStateException("Source file must contain exactly 50 records. Counting: ${content.size} records")
@@ -62,14 +33,7 @@ fun appendTextFile() {
 
 }
 
-fun readTextFile() : ArrayList<Record>{
-
-    val filePath = "project_files/example.txt"
-        val file = File(filePath)
-
-    if (!file.exists()) {
-        println("File does not exist. Run the create program first")
-    }
+fun readTextFile(file : File) : ArrayList<Record>{
     val records = ArrayList<Record>()
     file.bufferedReader().use { reader -> // bufferedreader to efficiently read the file . stores in reader
         reader.forEachLine { line -> // for each line in the reader
@@ -87,25 +51,11 @@ fun readTextFile() : ArrayList<Record>{
     return records
 }
 
-fun createJsonFile() {
-    val directory = "project_files"
-    val filePath = "$directory/json-example.txt"
-    val dir = File(directory)
-    if (!dir.exists()) {
-        dir.mkdirs()
-    }
-    val file = File(filePath)
-
-    val sourcePath = "/Users/danielabbott/Downloads/fake_data_records.txt"
-    val sourceFile = File(sourcePath)
-    if (!sourceFile.exists()) {
-        println("Source file does not exist: $sourcePath")
-        return
-    }
+fun createJsonFile(file : File, sourceFile : File) {
     file.createNewFile()
 
     val content = sourceFile.readLines()
-    if (content.size != 50){
+    if (content.size != 100){
         println("File does not contain exactly 50 records.")
     }
 
@@ -126,22 +76,15 @@ fun createJsonFile() {
 
 }
 
-fun appendJsonFile() {
-    val filePath = "project_files/json-example.txt"
-    val file = File(filePath)
-
-    if (!file.exists()) {
-        println("File does not exist. Run the create program first")
+fun appendJsonFile(file : File, sourceFile50 : File) {
+    if (!sourceFile50.exists()) {
+        println("Source file does not exist")
         return
     }
 
-    val sourcePath = "/Users/danielabbott/Downloads/fake_data_records_50.txt"
-    val sourceFile = File(sourcePath)
-    if (!sourceFile.exists()) {
-        println("Source file does not exist: $sourcePath")
-        return
-    }
-    val content = sourceFile.readLines()
+
+    val content = sourceFile50.readLines()
+
     if (content.size != 50){
         println("Source file must contain exactly 50 records. Counting: ${content.size} records")
     }
@@ -170,27 +113,17 @@ fun appendJsonFile() {
     }
 }
 
-fun readJsonFile() : List<Record> {
-    val filePath = "project_files/json-example.txt"
-    val file = File(filePath)
-
-    if (!file.exists()) {
-        println("File does not exist. Run the create program first")
-    }
+fun readJsonFile(file : File) : List<Record> {
     val gson = Gson()
     val listType = object : TypeToken<List<Record>>() {}.type
     val records: List<Record> = file.bufferedReader().use { reader ->
         gson.fromJson(reader, listType)
     }
-    records.forEach { record ->
-        val line = "${record.firstName},${record.lastName},${record.dob},${record.phone},${record.street},${record.city},${record.state},${record.zip}"
-        //println(line)
-    }
     return records
 
 }
 
-fun printTable(records: List<Record>) {
+fun printTableJSON(records: List<Record>) {
     println("| First Name | Last Name | DOB        | Phone           | Street Address     | City           | State | Zip     |")
     println("|------------|-----------|------------|-----------------|--------------------|----------------|-------|---------|")
 
@@ -209,13 +142,39 @@ fun printTableTXT(records: ArrayList<Record>) {
 }
 
 fun main() {
-    createTxtFile()
-    createJsonFile()
-    appendTextFile()
-    appendJsonFile()
+    val directory = "project_files"
+    val filePathTxt = "$directory/exampleTxt.txt"
+    val filePathJson = "$directory/exampleJson.txt"
+    val dir = File(directory)
+
+    if (!dir.exists()) {
+        dir.mkdirs()
+    }
+
+    val fileTxt = File(filePathTxt)
+    val fileJson = File(filePathJson)
+
+    val sourcePath100 = "/Users/danielabbott/Downloads/fake_data_records.txt"
+    val sourceFile100 = File(sourcePath100)
+    val sourcePath50 = "/Users/danielabbott/Downloads/fake_data_records_50.txt"
+    val sourceFile50 = File(sourcePath50)
+
+    if (!sourceFile100.exists()) {
+        println("Source file does not exist: $sourcePath100")
+        return
+    }
+    if (!sourceFile50.exists()) {
+        println("Source file does not exist: $sourcePath50")
+        return
+    }
+
+    createTxtFile(fileTxt, sourceFile100)
+    createJsonFile(fileJson, sourceFile100)
+    appendTextFile(fileTxt, sourceFile50)
+    appendJsonFile(fileJson, sourceFile50)
 
     println("JSON FILE START")
-    printTable(readJsonFile())
+    printTableJSON(readJsonFile(fileJson))
     println("TEXT FILE START")
-    printTableTXT(readTextFile())
+    printTableTXT(readTextFile(fileTxt))
 }
